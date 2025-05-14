@@ -44,7 +44,9 @@ export default function Sidebar() {
         <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
           🎓
         </div>
-        <span className="text-xl font-semibold text-gray-800">MIS-ERP</span>
+        <span className="text-xl font-semibold text-gray-800">
+          Student Portal
+        </span>
       </div>
 
       <nav className="flex-1 flex flex-col space-y-4">
