@@ -1,21 +1,59 @@
-// src/App.jsx
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
-import PersonalInfoPage from "./pages/PersonalInfoPage"
+import PersonalInfoPage from "./pages/PersonalInfoPage";
+import PrivateRoute from "./components/PrivateRoute";
+import { useUserStore } from "./stores/useUserStore";
 
 export default function App() {
+  const user = useUserStore((state) => state.user);
+
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/personal" element={<PersonalInfoPage/>}/>
-        <Route path="*" element={<Navigate to="/login" />} />
+        {/* Public */}
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+        />
+        <Route
+          path="/register"
+          element={
+            user ? <Navigate to="/dashboard" replace /> : <RegisterPage />
+          }
+        />
+
+        {/* Protected */}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <DashboardPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/personal-info/:id"
+          element={
+            <PrivateRoute>
+              <PersonalInfoPage />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Fallback */}
+        <Route
+          path="*"
+          element={<Navigate to={user ? "/dashboard" : "/login"} replace />}
+        />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
